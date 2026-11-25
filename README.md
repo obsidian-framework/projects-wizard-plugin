@@ -4,9 +4,6 @@
     <a href="https://github.com">
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
     </a>
-    <a href="https://jetbrains.com">
-        <img src="https://shields.io" alt="IntelliJ IDEA 2024.1+">
-    </a>
     <a href="https://www.oracle.com/java/">
         <img src="https://img.shields.io/badge/Java-17+-orange.svg" alt="Java 17+">
     </a>
@@ -52,7 +49,7 @@
 ## Building from Source
 
 ```bash
-git clone https://github.com
+git clone https://github.com/obsidian-framework/projects-wizard-plugin
 cd projects-wizard-plugin
 ./gradlew buildPlugin
 ```
