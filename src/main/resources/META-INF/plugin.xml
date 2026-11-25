@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>com.obsidian-java.framework</id>
+    <name>Obsidian Project Wizard</name>
+    <vendor email="maintainer@obsidian-java.com" url="https://obsidian-java.com">Obsidian Framework</vendor>
+
+    <description><![CDATA[
+        Official project generator and starter kit selector for the Obsidian Java web framework.
+        Quickly bootstrap new Obsidian applications (Blank Obsidian App, Flint starter kit, Blog example, LiveComponents, Realtime SSE) directly from the New Project wizard.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <newProjectWizard.generator implementation="com.obsidian.ObsidianNewProjectWizard"/>
+    </extensions>
+</idea-plugin>
