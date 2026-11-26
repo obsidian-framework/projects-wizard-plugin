@@ -5,7 +5,7 @@
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
     </a>
     <a href="https://www.oracle.com/java/">
-        <img src="https://img.shields.io/badge/Java-17+-orange.svg" alt="Java 17+">
+        <img src="https://img.shields.io/badge/Java-21+-orange.svg" alt="Java 17+">
     </a>
 </p>
 
