@@ -10,12 +10,12 @@ import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-final class TemplateDownloader {
+final class TemplateDownloader
+{
+    private TemplateDownloader() { }
 
-    private TemplateDownloader() {
-    }
-
-    static void download(Template template, Path targetDir, ProgressIndicator indicator) throws IOException {
+    static void download(Template template, Path targetDir, ProgressIndicator indicator) throws IOException
+    {
         Path tempZip = Files.createTempFile("obsidian-template-", ".zip");
         try {
             indicator.setText("Downloading template...");
@@ -30,7 +30,8 @@ final class TemplateDownloader {
         }
     }
 
-    private static void unzipStrippingRootFolder(Path zipFile, Path destDir) throws IOException {
+    private static void unzipStrippingRootFolder(Path zipFile, Path destDir) throws IOException
+    {
         Path root = destDir.toAbsolutePath().normalize();
 
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(zipFile))) {
@@ -39,7 +40,7 @@ final class TemplateDownloader {
                 String name = entry.getName();
                 int firstSlash = name.indexOf('/');
                 if (firstSlash == -1 || firstSlash == name.length() - 1) {
-                    continue; // top-level folder entry itself
+                    continue;
                 }
 
                 Path out = root.resolve(name.substring(firstSlash + 1)).normalize();

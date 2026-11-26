@@ -18,8 +18,8 @@ import java.util.stream.Stream;
  * Renames the root package of a freshly extracted template:
  * rewrites package/import lines, then moves the source directories.
  */
-final class PackageRelocator {
-
+final class PackageRelocator
+{
     private static final Pattern VALID_PACKAGE = Pattern.compile("[a-zA-Z_]\\w*(\\.[a-zA-Z_]\\w*)*");
     private static final Pattern PACKAGE_DECL = Pattern.compile("^\\s*package\\s+([\\w.]+)\\s*;");
     private static final Pattern IMPORT_DECL = Pattern.compile("^\\s*import\\s+(?:static\\s+)?([\\w.]+?)(\\.\\*)?\\s*;");
@@ -34,7 +34,8 @@ final class PackageRelocator {
     /**
      * @return the old root package if something was relocated, empty otherwise
      */
-    static Optional<String> relocate(Path projectRoot, String newPkg) throws IOException {
+    static Optional<String> relocate(Path projectRoot, String newPkg) throws IOException
+    {
         Path src = projectRoot.resolve("src");
         Path mainJava = src.resolve("main/java");
         if (!Files.isDirectory(mainJava)) {
@@ -58,7 +59,8 @@ final class PackageRelocator {
         return Optional.of(oldPkg);
     }
 
-    private static Optional<String> detectRootPackage(Path javaRoot) throws IOException {
+    private static Optional<String> detectRootPackage(Path javaRoot) throws IOException
+    {
         String[] common = null;
         for (Path file : listJavaFiles(javaRoot)) {
             Optional<String> pkg = readPackage(file);
@@ -72,28 +74,31 @@ final class PackageRelocator {
         return Optional.of(String.join(".", common));
     }
 
-    private static String[] commonPrefix(String[] a, String[] b) {
+    private static String[] commonPrefix(String[] a, String[] b)
+    {
         int max = Math.min(a.length, b.length);
         int i = 0;
         while (i < max && a[i].equals(b[i])) i++;
         return Arrays.copyOf(a, i);
     }
 
-    /** Packages and top-level types that exist in the template itself. */
-    private record LocalIndex(Set<String> packages, Set<String> types) {
+    private record LocalIndex(Set<String> packages, Set<String> types)
+    {
         boolean contains(String importName, boolean wildcard) {
             if (wildcard && packages.contains(importName)) {
                 return true;
             }
             // covers class imports, nested classes and static members
-            for (String name = importName; name != null; name = parent(name)) {
+            for (String name = importName; name != null; name = parent(name))
+            {
                 if (types.contains(name)) return true;
             }
             return false;
         }
     }
 
-    private static LocalIndex buildIndex(List<Path> javaFiles) throws IOException {
+    private static LocalIndex buildIndex(List<Path> javaFiles) throws IOException
+    {
         Set<String> packages = new HashSet<>();
         Set<String> types = new HashSet<>();
         for (Path file : javaFiles) {
@@ -106,7 +111,8 @@ final class PackageRelocator {
         return new LocalIndex(packages, types);
     }
 
-    private static Optional<String> readPackage(Path file) throws IOException {
+    private static Optional<String> readPackage(Path file) throws IOException
+    {
         for (String line : Files.readAllLines(file, StandardCharsets.UTF_8)) {
             Matcher m = PACKAGE_DECL.matcher(line);
             if (m.find()) return Optional.of(m.group(1));
@@ -114,18 +120,21 @@ final class PackageRelocator {
         return Optional.empty();
     }
 
-    private static List<Path> listJavaFiles(Path root) throws IOException {
+    private static List<Path> listJavaFiles(Path root) throws IOException
+    {
         try (Stream<Path> walk = Files.walk(root)) {
             return walk.filter(p -> p.toString().endsWith(".java")).toList();
         }
     }
 
-    private static String parent(String name) {
+    private static String parent(String name)
+    {
         int dot = name.lastIndexOf('.');
         return dot < 0 ? null : name.substring(0, dot);
     }
 
-    private static void rewrite(Path file, String oldPkg, String newPkg, LocalIndex index) throws IOException {
+    private static void rewrite(Path file, String oldPkg, String newPkg, LocalIndex index) throws IOException
+    {
         List<String> lines = new ArrayList<>(Files.readAllLines(file, StandardCharsets.UTF_8));
         boolean changed = false;
 
@@ -142,7 +151,8 @@ final class PackageRelocator {
         }
     }
 
-    private static boolean needsRewrite(String line, String oldPkg, LocalIndex index) {
+    private static boolean needsRewrite(String line, String oldPkg, LocalIndex index)
+    {
         Matcher pkg = PACKAGE_DECL.matcher(line);
         if (pkg.find()) {
             return isUnder(pkg.group(1), oldPkg);
@@ -153,19 +163,19 @@ final class PackageRelocator {
                 && index.contains(imp.group(1), imp.group(2) != null);
     }
 
-    /** True for the root itself or anything below it ("com.exampleFoo" is NOT under "com.example"). */
-    private static boolean isUnder(String name, String root) {
+    private static boolean isUnder(String name, String root)
+    {
         return name.equals(root) || name.startsWith(root + ".");
     }
 
-    private static void moveRoot(Path sourceRoot, String oldPkg, String newPkg) throws IOException {
+    private static void moveRoot(Path sourceRoot, String oldPkg, String newPkg) throws IOException
+    {
         Path oldDir = sourceRoot.resolve(oldPkg.replace('.', '/'));
-        if (!Files.isDirectory(oldDir)) {
-            return;
-        }
+
+        if (!Files.isDirectory(oldDir)) {  return; }
+
         Path newDir = sourceRoot.resolve(newPkg.replace('.', '/'));
 
-        // Park the tree in a temp dir first: the new package can be nested in (or contain) the old one.
         Path tmp = Files.createTempDirectory(sourceRoot, "relocate-");
         Path parked = tmp.resolve("pkg");
         Files.move(oldDir, parked);
@@ -176,7 +186,8 @@ final class PackageRelocator {
         Files.delete(tmp);
     }
 
-    private static void deleteEmptyParents(Path current, Path stopAt) throws IOException {
+    private static void deleteEmptyParents(Path current, Path stopAt) throws IOException
+    {
         while (current != null && !current.equals(stopAt) && current.startsWith(stopAt)) {
             try (Stream<Path> entries = Files.list(current)) {
                 if (entries.findAny().isPresent()) {

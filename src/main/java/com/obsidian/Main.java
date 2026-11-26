@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class ObsidianNewProjectWizard implements GeneratorNewProjectWizard {
-
-    private static final Logger LOG = Logger.getInstance(ObsidianNewProjectWizard.class);
-    private static final Icon OBSIDIAN_ICON = IconLoader.getIcon("/icons/obsidianLogo.svg", ObsidianNewProjectWizard.class);
+public class Main implements GeneratorNewProjectWizard
+{
+    private static final Logger LOG = Logger.getInstance(Main.class);
+    private static final Icon OBSIDIAN_ICON = IconLoader.getIcon("/icons/obsidianLogo.svg", Main.class);
 
     @Override
     public @NonNull String getId() {
@@ -45,11 +45,13 @@ public class ObsidianNewProjectWizard implements GeneratorNewProjectWizard {
     }
 
     @Override
-    public @NonNull NewProjectWizardStep createStep(@NonNull WizardContext wizardContext) {
+    public @NonNull NewProjectWizardStep createStep(@NonNull WizardContext wizardContext)
+    {
         RootNewProjectWizardStep rootStep = new RootNewProjectWizardStep(wizardContext);
         NewProjectWizardBaseStep baseStep = new NewProjectWizardBaseStep(rootStep);
 
-        return new AbstractNewProjectWizardStep(baseStep) {
+        return new AbstractNewProjectWizardStep(baseStep)
+        {
             private final ComboBox<Template> templateCombo = new ComboBox<>(Template.values());
             private final JBTextField packageField = new JBTextField("com.example.app");
 
@@ -69,7 +71,8 @@ public class ObsidianNewProjectWizard implements GeneratorNewProjectWizard {
             }
 
             @Override
-            public void setupProject(@NonNull Project project) {
+            public void setupProject(@NonNull Project project)
+            {
                 baseStep.setupProject(project);
 
                 Template template = (Template) templateCombo.getSelectedItem();
@@ -80,7 +83,8 @@ public class ObsidianNewProjectWizard implements GeneratorNewProjectWizard {
                         ? Path.of(basePath)
                         : Path.of(baseStep.getPath(), projectName);
 
-                ProgressManager.getInstance().run(new Task.Modal(project, "Creating Obsidian project...", true) {
+                ProgressManager.getInstance().run(new Task.Modal(project, "Creating Obsidian project...", true)
+                {
                     @Override
                     public void run(@NonNull ProgressIndicator indicator) {
                         try {
@@ -98,12 +102,13 @@ public class ObsidianNewProjectWizard implements GeneratorNewProjectWizard {
         };
     }
 
-    private static void generate(Template template, Path targetDir, String pkg, String projectName,
-                                 ProgressIndicator indicator) throws IOException {
+    private static void generate(Template template, Path targetDir, String pkg, String projectName, ProgressIndicator indicator) throws IOException
+    {
         indicator.setIndeterminate(true);
         TemplateDownloader.download(template, targetDir, indicator);
 
-        if (PackageRelocator.isValidPackageName(pkg)) {
+        if (PackageRelocator.isValidPackageName(pkg))
+        {
             indicator.setText("Configuring package " + pkg + "...");
             Optional<String> oldPkg = PackageRelocator.relocate(targetDir, pkg);
             if (oldPkg.isPresent()) {

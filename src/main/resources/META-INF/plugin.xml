@@ -12,6 +12,6 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <newProjectWizard.generator implementation="com.obsidian.ObsidianNewProjectWizard"/>
+        <newProjectWizard.generator implementation="com.obsidian.Main"/>
     </extensions>
 </idea-plugin>

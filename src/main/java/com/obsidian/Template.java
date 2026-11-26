@@ -1,6 +1,7 @@
 package com.obsidian;
 
-public enum Template {
+public enum Template
+{
     DEFAULT("Default App (Base Obsidian)", "obsidian"),
     FLINT("Flint (Starter Kit avec Auth)", "flint"),
     LIVECOMPONENTS("LiveComponents Examples", "livecomponents-examples"),
@@ -20,7 +21,6 @@ public enum Template {
         return GITHUB_BASE + repo + "/archive/HEAD.zip";
     }
 
-    /** Used by the ComboBox renderer. */
     @Override
     public String toString() {
         return label;
