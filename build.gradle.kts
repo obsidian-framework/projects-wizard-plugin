@@ -1,19 +1,19 @@
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.changelog")
-    id("org.jetbrains.intellij.platform")
+    id("java")
+    id("org.jetbrains.intellij.platform") version "2.20.0"
+}
+
+group = "com.obsidian"
+version = "1.0.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+    intellijPlatform { defaultRepositories() }
 }
 
 dependencies {
-    testImplementation(libs.junit)
-
     intellijPlatform {
         intellijIdea("2026.2.4")
-        testFramework(TestFrameworkType.Platform)
-
-        // Add plugin dependencies for compilation here, for example:
         bundledPlugin("com.intellij.java")
     }
 }
@@ -27,8 +27,6 @@ intellijPlatform {
     }
 }
 
-tasks {
-    runIde {
-        jvmArgs("-Dijent.enabled=false")
-    }
+tasks.runIde {
+    jvmArgs("-Dijent.enabled=false")
 }
